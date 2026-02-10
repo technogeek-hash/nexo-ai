@@ -8,10 +8,10 @@
   "icon": "media/icon.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nexo-ai/nexo-agent"
+    "url": "https://github.com/technogeek-hash/nexo-ai"
   },
   "bugs": {
-    "url": "https://github.com/nexo-ai/nexo-agent/issues"
+    "url": "https://github.com/technogeek-hash/nexo-ai/issues"
   },
   "homepage": "https://github.com/nexo-ai/nexo-agent#readme",
   "engines": {
