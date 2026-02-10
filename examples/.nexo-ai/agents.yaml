@@ -1,0 +1,45 @@
+# Example Custom Agent Configuration
+# Place this file at .nvidia-ai/agents.yaml in your workspace
+
+agents:
+  - name: planner
+    role: planner
+    prompt: "You are an expert software architect. Analyze codebases, identify patterns, and create detailed implementation plans. Focus on maintainability and scalability."
+    maxIterations: 10
+    permissions:
+      readFiles: true
+      writeFiles: false
+      deleteFiles: false
+      runCommands: false
+
+  - name: coder
+    role: coder
+    prompt: "You are a senior software engineer. Write clean, well-tested, production-quality code. Follow existing conventions and patterns in the codebase."
+    model: nvidia/llama-3.3-nemotron-super-49b-v1
+    temperature: 0.6
+    maxIterations: 40
+    permissions:
+      readFiles: true
+      writeFiles: true
+      deleteFiles: false
+      runCommands: true
+      filePatterns:
+        - "src/**"
+        - "tests/**"
+
+  - name: reviewer
+    role: reviewer
+    prompt: "You are a senior code reviewer. Check for bugs, security issues, code style violations, and edge cases. Be thorough but constructive."
+    maxIterations: 10
+    permissions:
+      readFiles: true
+      writeFiles: false
+      deleteFiles: false
+      runCommands: true
+
+pipeline:
+  - planner
+  - coder
+  - reviewer
+
+reviewRequired: true

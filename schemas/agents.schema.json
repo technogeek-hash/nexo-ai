@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "NexoAgent Configuration",
+  "description": "Define custom agents with roles, permissions, and prompts for the NexoAgent extension.",
+  "type": "object",
+  "properties": {
+    "agents": {
+      "type": "array",
+      "description": "List of custom agent definitions.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Unique name for the agent.",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9_-]*$",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "role": {
+            "type": "string",
+            "description": "The agent's role (planner, coder, reviewer, or custom).",
+            "enum": ["planner", "coder", "reviewer", "custom"]
+          },
+          "prompt": {
+            "type": "string",
+            "description": "System prompt that defines the agent's behavior.",
+            "minLength": 10,
+            "maxLength": 10000
+          },
+          "model": {
+            "type": "string",
+            "description": "Override the default model for this agent."
+          },
+          "temperature": {
+            "type": "number",
+            "description": "Override temperature for this agent.",
+            "minimum": 0,
+            "maximum": 2
+          },
+          "maxIterations": {
+            "type": "integer",
+            "description": "Maximum tool-use iterations for this agent.",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "permissions": {
+            "type": "object",
+            "description": "Control what this agent is allowed to do.",
+            "properties": {
+              "readFiles": {
+                "type": "boolean",
+                "description": "Allow reading files.",
+                "default": true
+              },
+              "writeFiles": {
+                "type": "boolean",
+                "description": "Allow creating and editing files.",
+                "default": false
+              },
+              "deleteFiles": {
+                "type": "boolean",
+                "description": "Allow deleting files.",
+                "default": false
+              },
+              "runCommands": {
+                "type": "boolean",
+                "description": "Allow running shell commands.",
+                "default": false
+              },
+              "filePatterns": {
+                "type": "array",
+                "description": "Glob patterns restricting which files the agent can access.",
+                "items": { "type": "string" }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "required": ["name", "role", "prompt"],
+        "additionalProperties": false
+      }
+    },
+    "pipeline": {
+      "type": "array",
+      "description": "Custom agent execution order. Defaults to [planner, coder, reviewer].",
+      "items": { "type": "string" }
+    },
+    "reviewRequired": {
+      "type": "boolean",
+      "description": "Whether review is mandatory before applying changes.",
+      "default": true
+    }
+  },
+  "additionalProperties": false
+}

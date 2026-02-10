@@ -1,0 +1,476 @@
+{
+  "name": "nexo-agent",
+  "displayName": "NexoAgent",
+  "description": "Production-grade multi-agent AI coding assistant. Plan → Code → Review autonomously.",
+  "version": "2.0.0",
+  "publisher": "nexo-ai",
+  "license": "Apache-2.0",
+  "icon": "media/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nexo-ai/nexo-agent"
+  },
+  "bugs": {
+    "url": "https://github.com/nexo-ai/nexo-agent/issues"
+  },
+  "homepage": "https://github.com/nexo-ai/nexo-agent#readme",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "AI",
+    "Programming Languages",
+    "Machine Learning"
+  ],
+  "keywords": [
+    "ai",
+    "agent",
+    "nexo",
+    "coding assistant",
+    "copilot",
+    "code generation",
+    "refactoring",
+    "multi-agent",
+    "llm"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "nexo-agent",
+          "title": "%viewContainer.title%",
+          "icon": "media/activity.svg"
+        }
+      ]
+    },
+    "views": {
+      "nexo-agent": [
+        {
+          "type": "webview",
+          "id": "nexoAgent.chatView",
+          "name": "%view.chat.title%",
+          "icon": "media/activity.svg"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "nexoAgent.runAgent",
+        "title": "%command.runAgent%",
+        "icon": "$(hubot)"
+      },
+      {
+        "command": "nexoAgent.explainCode",
+        "title": "%command.explainCode%"
+      },
+      {
+        "command": "nexoAgent.fixCode",
+        "title": "%command.fixCode%"
+      },
+      {
+        "command": "nexoAgent.refactorCode",
+        "title": "%command.refactorCode%"
+      },
+      {
+        "command": "nexoAgent.addTests",
+        "title": "%command.addTests%"
+      },
+      {
+        "command": "nexoAgent.addDocs",
+        "title": "%command.addDocs%"
+      },
+      {
+        "command": "nexoAgent.fixErrors",
+        "title": "%command.fixErrors%"
+      },
+      {
+        "command": "nexoAgent.createApp",
+        "title": "%command.createApp%",
+        "icon": "$(rocket)"
+      },
+      {
+        "command": "nexoAgent.undo",
+        "title": "%command.undo%"
+      },
+      {
+        "command": "nexoAgent.openSettings",
+        "title": "%command.openSettings%"
+      },
+      {
+        "command": "nexoAgent.focusChat",
+        "title": "%command.focusChat%"
+      },
+      {
+        "command": "nexoAgent.setApiKey",
+        "title": "%command.setApiKey%"
+      },
+      {
+        "command": "nexoAgent.deleteApiKey",
+        "title": "%command.deleteApiKey%"
+      },
+      {
+        "command": "nexoAgent.resetTokens",
+        "title": "%command.resetTokens%"
+      },
+      {
+        "command": "nexoAgent.setOpenRouterApiKey",
+        "title": "%command.setOpenRouterApiKey%"
+      },
+      {
+        "command": "nexoAgent.deleteOpenRouterApiKey",
+        "title": "%command.deleteOpenRouterApiKey%"
+      },
+      {
+        "command": "nexoAgent.switchProvider",
+        "title": "%command.switchProvider%",
+        "icon": "$(arrow-swap)"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "nexoAgent.runAgent",
+        "key": "ctrl+shift+i",
+        "mac": "cmd+shift+i"
+      },
+      {
+        "command": "nexoAgent.focusChat",
+        "key": "ctrl+shift+a",
+        "mac": "cmd+shift+a"
+      },
+      {
+        "command": "nexoAgent.fixErrors",
+        "key": "ctrl+shift+f",
+        "mac": "cmd+shift+f",
+        "when": "editorFocus"
+      },
+      {
+        "command": "nexoAgent.createApp",
+        "key": "ctrl+shift+n",
+        "mac": "cmd+shift+n"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "nexoAgent.explainCode",
+          "when": "editorHasSelection",
+          "group": "nexo-ai@1"
+        },
+        {
+          "command": "nexoAgent.fixCode",
+          "when": "editorHasSelection",
+          "group": "nexo-ai@2"
+        },
+        {
+          "command": "nexoAgent.refactorCode",
+          "when": "editorHasSelection",
+          "group": "nexo-ai@3"
+        },
+        {
+          "command": "nexoAgent.addTests",
+          "when": "editorHasSelection",
+          "group": "nexo-ai@4"
+        },
+        {
+          "command": "nexoAgent.addDocs",
+          "when": "editorHasSelection",
+          "group": "nexo-ai@5"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "nexoAgent.openSettings",
+          "when": "view == nexoAgent.chatView",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "%config.title%",
+      "properties": {
+        "nexoAgent.provider": {
+          "type": "string",
+          "default": "nvidia",
+          "enum": [
+            "nvidia",
+            "openrouter"
+          ],
+          "enumDescriptions": [
+            "NVIDIA API (build.nvidia.com)",
+            "OpenRouter (openrouter.ai) — access Claude, GPT-4, Gemini, Llama, and 200+ models"
+          ],
+          "description": "%config.provider.desc%",
+          "order": 0
+        },
+        "nexoAgent.baseUrl": {
+          "type": "string",
+          "default": "https://integrate.api.nvidia.com/v1",
+          "description": "%config.baseUrl.desc%",
+          "order": 1
+        },
+        "nexoAgent.model": {
+          "type": "string",
+          "default": "nvidia/llama-3.3-nemotron-super-49b-v1",
+          "markdownDescription": "%config.model.desc%",
+          "enum": [
+            "nvidia/llama-3.3-nemotron-super-49b-v1",
+            "nvidia/llama-3.1-nemotron-ultra-253b-v1",
+            "minimaxai/minimax-m2.1",
+            "deepseek-ai/deepseek-r1",
+            "qwen/qwen2.5-coder-32b-instruct",
+            "meta/llama-3.3-70b-instruct",
+            "google/gemma-3-27b-it"
+          ],
+          "order": 2
+        },
+        "nexoAgent.openRouterModel": {
+          "type": "string",
+          "default": "anthropic/claude-sonnet-4",
+          "markdownDescription": "%config.openRouterModel.desc%",
+          "enum": [
+            "anthropic/claude-sonnet-4",
+            "anthropic/claude-opus-4",
+            "anthropic/claude-3.5-haiku",
+            "openai/gpt-4.1",
+            "openai/gpt-4.1-mini",
+            "openai/o3",
+            "openai/o4-mini",
+            "google/gemini-2.5-pro-preview",
+            "google/gemini-2.5-flash-preview",
+            "deepseek/deepseek-r1",
+            "deepseek/deepseek-chat-v3",
+            "meta-llama/llama-4-maverick",
+            "meta-llama/llama-4-scout",
+            "qwen/qwen3-235b-a22b",
+            "mistralai/codestral-2501",
+            "x-ai/grok-3-beta"
+          ],
+          "order": 3
+        },
+        "nexoAgent.openRouterBaseUrl": {
+          "type": "string",
+          "default": "https://openrouter.ai/api/v1",
+          "description": "%config.openRouterBaseUrl.desc%",
+          "order": 4
+        },
+        "nexoAgent.temperature": {
+          "type": "number",
+          "default": 0.6,
+          "minimum": 0,
+          "maximum": 2,
+          "description": "%config.temperature.desc%",
+          "order": 3
+        },
+        "nexoAgent.topP": {
+          "type": "number",
+          "default": 0.95,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "%config.topP.desc%",
+          "order": 4
+        },
+        "nexoAgent.maxTokens": {
+          "type": "number",
+          "default": 8192,
+          "minimum": 256,
+          "maximum": 32768,
+          "description": "%config.maxTokens.desc%",
+          "order": 5
+        },
+        "nexoAgent.maxIterations": {
+          "type": "number",
+          "default": 40,
+          "minimum": 1,
+          "maximum": 100,
+          "description": "%config.maxIterations.desc%",
+          "order": 6
+        },
+        "nexoAgent.autoApply": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.autoApply.desc%",
+          "order": 7
+        },
+        "nexoAgent.contextLines": {
+          "type": "number",
+          "default": 200,
+          "description": "%config.contextLines.desc%",
+          "order": 8
+        },
+        "nexoAgent.maxFileSize": {
+          "type": "number",
+          "default": 100000,
+          "description": "%config.maxFileSize.desc%",
+          "order": 9
+        },
+        "nexoAgent.commandTimeout": {
+          "type": "number",
+          "default": 30000,
+          "description": "%config.commandTimeout.desc%",
+          "order": 10
+        },
+        "nexoAgent.telemetry": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.telemetry.desc%",
+          "order": 11
+        },
+        "nexoAgent.styleEnforcement": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.styleEnforcement.desc%",
+          "order": 12
+        },
+        "nexoAgent.candidateCount": {
+          "type": "number",
+          "default": 3,
+          "minimum": 1,
+          "maximum": 5,
+          "description": "%config.candidateCount.desc%",
+          "order": 13
+        },
+        "nexoAgent.styleThreshold": {
+          "type": "number",
+          "default": 70,
+          "minimum": 0,
+          "maximum": 100,
+          "description": "%config.styleThreshold.desc%",
+          "order": 14
+        },
+        "nexoAgent.codeTemperature": {
+          "type": "number",
+          "default": 0.05,
+          "minimum": 0,
+          "maximum": 0.3,
+          "description": "%config.codeTemperature.desc%",
+          "order": 15
+        },
+        "nexoAgent.enableSubAgents": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.enableSubAgents.desc%",
+          "order": 16
+        },
+        "nexoAgent.maxSubAgents": {
+          "type": "number",
+          "default": 4,
+          "minimum": 1,
+          "maximum": 8,
+          "description": "%config.maxSubAgents.desc%",
+          "order": 17
+        },
+        "nexoAgent.subAgentTimeout": {
+          "type": "number",
+          "default": 120000,
+          "minimum": 30000,
+          "maximum": 600000,
+          "description": "%config.subAgentTimeout.desc%",
+          "order": 18
+        },
+        "nexoAgent.complexityThreshold": {
+          "type": "number",
+          "default": 50,
+          "minimum": 0,
+          "maximum": 100,
+          "description": "%config.complexityThreshold.desc%",
+          "order": 19
+        },
+        "nexoAgent.enableMemory": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.enableMemory.desc%",
+          "order": 20
+        },
+        "nexoAgent.enableRAG": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.enableRAG.desc%",
+          "order": 21
+        },
+        "nexoAgent.thinkMode": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "off",
+            "auto",
+            "always"
+          ],
+          "enumDescriptions": [
+            "Think mode disabled",
+            "Think mode available via toolbar toggle",
+            "Think mode always active"
+          ],
+          "description": "%config.thinkMode.desc%",
+          "order": 22
+        },
+        "nexoAgent.thinkBudget": {
+          "type": "number",
+          "default": 2048,
+          "minimum": 256,
+          "maximum": 8192,
+          "description": "%config.thinkBudget.desc%",
+          "order": 23
+        },
+        "nexoAgent.enableMCP": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.enableMCP.desc%",
+          "order": 24
+        },
+        "nexoAgent.mcpServers": {
+          "type": "object",
+          "default": {},
+          "description": "%config.mcpServers.desc%",
+          "order": 25
+        }
+      }
+    },
+    "jsonValidation": [
+      {
+        "fileMatch": ".nexo-ai/agents.json",
+        "url": "./schemas/agents.schema.json"
+      }
+    ],
+    "yamlValidation": [
+      {
+        "fileMatch": ".nexo-ai/agents.yaml",
+        "url": "./schemas/agents.schema.json"
+      },
+      {
+        "fileMatch": ".nexo-ai/agents.yml",
+        "url": "./schemas/agents.schema.json"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "webpack --mode production",
+    "watch": "webpack --mode development --watch",
+    "dev": "webpack --mode development",
+    "package": "npm run compile && vsce package --no-dependencies",
+    "package:patch": "npm version patch --no-git-tag-version && npm run package",
+    "package:minor": "npm version minor --no-git-tag-version && npm run package",
+    "package:major": "npm version major --no-git-tag-version && npm run package",
+    "lint": "tsc --noEmit",
+    "test": "tsc -p tsconfig.test.json && mocha --ui tdd --timeout 10000 './out/tests/tests/unit/**/*.test.js'",
+    "test:e2e": "tsc -p tsconfig.test.json && node ./out/tests/tests/e2e/runTests.js",
+    "pretest": "npm run lint"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/test-electron": "^2.3.8",
+    "@vscode/vsce": "^2.22.0",
+    "glob": "^10.3.10",
+    "mocha": "^10.2.0",
+    "ts-loader": "^9.5.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.0",
+    "webpack": "^5.90.0",
+    "webpack-cli": "^5.1.4"
+  }
+}

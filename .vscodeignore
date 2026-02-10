@@ -1,0 +1,34 @@
+# Build & dev files
+.vscode/**
+node_modules/**
+src/**
+out/**
+tests/**
+tsconfig.json
+tsconfig.test.json
+webpack.config.js
+.gitignore
+.github/**
+
+# Source maps & TypeScript
+**/*.ts
+**/*.map
+!**/*.d.ts
+
+# Docs & misc not needed in VSIX
+feedback.md
+feedback-2.md
+examples/**
+style/**
+CONTRIBUTING.md
+CODE_OF_CONDUCT.md
+SECURITY.md
+PRIVACY.md
+
+# macOS resource forks
+**/._*
+._*
+.DS_Store
+
+# Scripts
+scripts/**
